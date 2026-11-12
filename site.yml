@@ -1,0 +1,7 @@
+---
+- name: Apache Web Server Deployment
+  hosts: webservers
+  become: yes
+
+  roles:
+    - apache

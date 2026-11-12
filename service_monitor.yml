@@ -1,0 +1,23 @@
+
+---
+- name: Apache Service Monitoring
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Check Apache Service Status
+      command: systemctl is-active httpd
+      register: apache_status
+      changed_when: false
+      failed_when: false
+
+    - name: Display NORMAL Status
+      debug:
+        msg: "NORMAL: Apache Service is Running"
+      when: apache_status.stdout == "active"
+
+    - name: Display ALERT Status
+      debug:
+        msg: "ALERT: Apache Service is NOT Running"
+      when: apache_status.stdout != "active"
+

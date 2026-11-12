@@ -1,0 +1,32 @@
+
+---
+- name: Linux Disk Usage Monitoring
+  hosts: webservers
+  gather_facts: yes
+
+  tasks:
+    - name: Display Normal Disk Status
+      debug:
+        msg: "NORMAL: Root Disk Usage is {{ ((item.size_total - item.size_available) * 100 / item.size_total) | round(2) }}%"
+      when:
+        - item.mount == "/"
+        - ((item.size_total - item.size_available) * 100 / item.size_total) < 80
+      loop: "{{ ansible_mounts }}"
+
+    - name: Display Warning Alert
+      debug:
+        msg: "WARNING: Root Disk Usage is {{ ((item.size_total - item.size_available) * 100 / item.size_total) | round(2) }}%"
+      when:
+        - item.mount == "/"
+        - ((item.size_total - item.size_available) * 100 / item.size_total) >= 80
+        - ((item.size_total - item.size_available) * 100 / item.size_total) < 90
+      loop: "{{ ansible_mounts }}"
+
+    - name: Display Critical Alert
+      debug:
+        msg: "CRITICAL: Root Disk Usage is {{ ((item.size_total - item.size_available) * 100 / item.size_total) | round(2) }}%"
+      when:
+        - item.mount == "/"
+        - ((item.size_total - item.size_available) * 100 / item.size_total) >= 90
+      loop: "{{ ansible_mounts }}"
+

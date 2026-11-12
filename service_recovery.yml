@@ -1,0 +1,27 @@
+---
+- name: Apache Automatic Service Recovery
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Check Apache Service
+      command: systemctl is-active httpd
+      register: apache_status
+      changed_when: false
+      failed_when: false
+
+    - name: Restart Apache If Stopped
+      service:
+        name: httpd
+        state: started
+        enabled: yes
+      when: apache_status.stdout != "active"
+
+    - name: Verify Apache Service
+      command: systemctl is-active httpd
+      register: recovery_status
+      changed_when: false
+
+    - name: Display Recovery Status
+      debug:
+        msg: "SUCCESS: Apache Service is {{ recovery_status.stdout }}"

@@ -1,0 +1,15 @@
+# Ansible temporary files
+*.retry
+*.log
+
+# Sensitive files
+*.vault
+*.pem
+*.key
+
+# Python cache
+__pycache__/
+*.pyc
+
+# Backup files
+*_backup.yml

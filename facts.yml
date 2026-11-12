@@ -1,0 +1,31 @@
+
+---
+- name: Ansible Facts Report
+  hosts: webservers
+  gather_facts: yes
+
+  tasks:
+    - name: Display Server Hostname
+      debug:
+        msg: "Hostname: {{ ansible_hostname }}"
+
+    - name: Display Operating System
+      debug:
+        msg: "OS: {{ ansible_distribution }} {{ ansible_distribution_version }}"
+
+    - name: Display Server IP
+      debug:
+        msg: "IP Address: {{ ansible_default_ipv4.address }}"
+
+    - name: Display CPU Information
+      debug:
+        msg: "CPU: {{ ansible_processor_vcpus }} vCPUs"
+
+    - name: Display RAM Information
+      debug:
+        msg: "Total RAM: {{ ansible_memtotal_mb }} MB"
+
+    - name: Display Server Uptime
+      debug:
+        msg: "Uptime: {{ ansible_uptime_seconds }} seconds"
+

@@ -1,0 +1,19 @@
+---
+- name: Deploy Web Application
+  hosts: webservers
+  become: yes
+
+  tasks:
+    - name: Deploy Application HTML
+      copy:
+        src: application/files/index.html
+        dest: /var/www/html/index.html
+        owner: apache
+        group: apache
+        mode: '0644'
+
+    - name: Ensure Apache is Running
+      service:
+        name: httpd
+        state: started
+        enabled: yes

@@ -1,0 +1,22 @@
+
+---
+- name: Production Disk Monitoring
+  hosts: webservers
+  gather_facts: yes
+
+  tasks:
+    - name: Calculate Root Disk Usage
+      set_fact:
+        root_disk_usage: "{{ ((item.size_total - item.size_available) * 100 / item.size_total) | round(2) }}"
+      when: item.mount == "/"
+      loop: "{{ ansible_mounts }}"
+
+    - name: Display Disk Usage
+      debug:
+        msg: "Root Disk Usage: {{ root_disk_usage }}%"
+
+    - name: Check Disk Status
+      debug:
+        msg: "NORMAL: Disk usage is healthy"
+      when: root_disk_usage | float < 80
+
